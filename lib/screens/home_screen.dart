@@ -1,7 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:futsal_management/custom_widgets/team_card.dart';
+import 'package:futsal_management/models/team.dart';
+import 'package:futsal_management/custom_widgets/add_team_dialog.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final List<Team> teams = [
+    Team(name: 'Team B', dept: 'Dept. B'),
+    Team(name: 'Team A', dept: 'Dept. A'),
+    Team(name: 'Team C', dept: 'Dept. C'),
+    Team(name: 'Team A', dept: 'Dept. A'),
+    Team(name: 'Team B', dept: 'Dept. B'),
+    Team(name: 'Team C', dept: 'Dept. C'),
+    Team(name: 'Team A', dept: 'Dept. A'),
+    Team(name: 'Team B', dept: 'Dept. B'),
+    Team(name: 'Team C', dept: 'Dept. C'),
+    Team(name: 'Team A', dept: 'Dept. A'),
+    Team(name: 'Team B', dept: 'Dept. B'),
+    Team(name: 'Team C', dept: 'Dept. C'),
+    // Add more teams here
+  ];
+
+  void addTeam(Team newTeam) {
+    setState(
+      () {
+        teams.add(newTeam);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,13 +80,38 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
 
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: Text(
+              'Teams',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+
           // Section 2: Other Content
           Expanded(
-            child: Center(
-              child: Text('Other content goes here'),
+            child: ListView.builder(
+              itemCount: teams.length,
+              itemBuilder: (context, index) {
+                return TeamCard(team: teams[index]);
+              },
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => AddTeamDialog(
+              onAdd: addTeam,
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
