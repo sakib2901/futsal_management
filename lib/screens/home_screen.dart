@@ -14,16 +14,24 @@ class HomeScreen extends StatelessWidget {
         title: const Text('Futsal Management App'),
       ),
       body: Container(
-        color:
-            const Color.fromARGB(255, 96, 204, 250), // Custom background color
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: <Color>[Colors.blue, Color.fromARGB(255, 212, 233, 250)]),
+          image: DecorationImage(
+            image: AssetImage('assets/images/football.png'),
+            fit: BoxFit.cover,
+          ),
+        ), // Custom background color
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.sports_soccer,
-                size: 150.0,
-                color: Colors.white,
+              SizedBox(
+                height: 200,
+                width: 200,
+                child: Image.asset('assets/images/logo.png'),
               ),
               const SizedBox(height: 30),
               _buildMenuCard(context, 'Teams', TeamScreen()),

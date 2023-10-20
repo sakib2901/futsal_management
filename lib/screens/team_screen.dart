@@ -1,32 +1,73 @@
-// File: team_screen.dart
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../models/team.dart';
 import '../services/team_service.dart';
 import '../widgets/custom_button.dart';
+import '../widgets/add_team_dialog.dart';
 
-class TeamScreen extends StatelessWidget {
+class TeamScreen extends StatefulWidget {
+  const TeamScreen({super.key});
+
+  @override
+  _TeamScreenState createState() => _TeamScreenState();
+}
+
+class _TeamScreenState extends State<TeamScreen> {
+  List<Team> _teams = []; // Store the list of teams
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTeams();
+  }
+
+  Future<void> _loadTeams() async {
+    // Load teams from the API or any other data source
+    List<Team> teams = await TeamService.getAllTeams();
+    setState(() {
+      _teams = teams;
+    });
+  }
+
+  void _addNewTeam() async {
+    final result = await showDialog(
+      context: context,
+      builder: (context) => const AddTeamDialog(),
+    );
+
+    if (result != null) {
+      // Add the new team to the list
+      String teamName = result['teamName'];
+      File? teamLogo = result['teamLogo'];
+
+      // Add your logic to add the new team to the list or API
+      // For now, we just add it to the local list
+      Team newTeam = Team(
+        id: _teams.length + 1, // Replace with the correct ID
+        name: teamName,
+        logoUrl: teamLogo?.path ?? '', // Replace with the correct URL if needed
+        logoImage: teamLogo,
+      );
+
+      setState(() {
+        _teams.add(newTeam);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Teams'),
+        title: const Text('Teams'),
       ),
-      body: FutureBuilder<List<Team>>(
-        future: TeamService.getAllTeams(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            final teams = snapshot.data;
-            return ListView.builder(
-              itemCount: teams?.length,
-              itemBuilder: (context, index) =>
-                  _buildTeamCard(context, teams![index]),
-            );
-          }
-        },
+      body: ListView.builder(
+        itemCount: _teams.length,
+        itemBuilder: (context, index) => _buildTeamCard(context, _teams[index]),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addNewTeam,
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -35,39 +76,29 @@ class TeamScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // Navigate to team details screen
-        // You can implement this later
       },
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Card(
           elevation: 4,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Padding(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Row(
               children: [
                 CircleAvatar(
-                  backgroundImage: NetworkImage(team.logoUrl),
+                  backgroundImage: team.logoImage != null
+                      ? FileImage(team.logoImage!)
+                      : NetworkImage(team.logoUrl) as ImageProvider<Object>,
                   radius: 40,
                 ),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        team.name,
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Total Players: ${team.totalPlayers}', // Replace with actual team data
-                        style:
-                            const TextStyle(fontSize: 14, color: Colors.grey),
-                      ),
-                    ],
+                  child: Text(
+                    team.name,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
                 CustomButton(

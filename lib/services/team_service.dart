@@ -1,10 +1,10 @@
+// File: team_service.dart
 import '../models/team.dart';
 
 class TeamService {
-  // Replace this with API integration in the future
   static Future<List<Team>> getAllTeams() async {
-    // Simulating fetching data from API
-    await Future.delayed(Duration(seconds: 1));
+    // Replace this code with your actual API call to fetch teams data
+    await Future.delayed(const Duration(seconds: 2)); // Simulating a delay
     return [
       Team(
           id: 1,
@@ -14,6 +14,7 @@ class TeamService {
           id: 2,
           name: 'Team B',
           logoUrl: 'https://example.com/team_b_logo.png'),
+      // Add more teams as needed
     ];
   }
 }
