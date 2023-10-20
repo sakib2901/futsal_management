@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:futsal_management/screens/home_screen.dart';
+import 'screens/home_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const FutsalManagementApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class FutsalManagementApp extends StatelessWidget {
+  const FutsalManagementApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomeScreen(),
+      home: const HomeScreen(),
     );
   }
 }

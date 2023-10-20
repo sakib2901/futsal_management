@@ -1,21 +1,15 @@
+// File: team.dart
+import 'dart:io';
+
 class Team {
+  final int id;
   final String name;
-  final String dept;
-  // final int playerCount;
-  List<String> players;
+  final String logoUrl;
+  File? logoImage;
 
-  Team({
-    required this.name,
-    required this.dept,
-    // required this.playerCount,
-    this.players = const [],
-  });
-
-  void addPlayer(String playerName) {
-    players.add(playerName);
-  }
-
-  void removePlayer(String playerName) {
-    players.remove(playerName);
-  }
+  Team(
+      {required this.id,
+      required this.name,
+      required this.logoUrl,
+      this.logoImage});
 }
